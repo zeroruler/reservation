@@ -1,0 +1,275 @@
+@import url("https://fonts.googleapis.com/css2?family=Gothic+A1&family=IBM+Plex+Sans+KR&family=Jua&family=Noto+Sans+KR:wght@100..900&display=swap");
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: "IBM Plex Sans KR";
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  margin: 0 auto;
+  padding: 0 0rem;
+  max-width: 50rem;
+  text-align: center;
+  align-items: center;
+  height: 100vh;
+  background: url("https://ifh.cc/g/awJ24d.jpg") center no-repeat;
+}
+
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  font-size: 24px;
+  color: #000000;
+}
+
+.calendar {
+  margin: 20px 0;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.day:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.selected {
+  background-color: #000;
+  color: #fff;
+}
+
+.previously-selected {
+  background-color: #4491db;
+  color: #fff;
+}
+
+.holiday {
+  background-color: #ffcccc;
+  color: #000;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  font-weight: bold;
+  text-align: center;
+  font-weight: lighter;
+}
+
+#time {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+   {
+    ...;
+  }
+  width: 100px;
+  height: 35px;
+  background-size: 20px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  outline: 0 none;
+}
+
+#time option {
+  background: black;
+  color: #fff;
+  padding: 3px 0;
+}
+
+.time-select {
+  display: none;
+  margin-top: 20px;
+  animation: fadeIn 0.5s;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  text-align: center;
+}
+
+.modal h2 {
+  font-weight: 200;
+}
+
+.modal input {
+  margin: 10px 0;
+  padding: 8px;
+  width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#confirm-btn,
+#submit-reservation,
+#modify-reservation,
+#cancel-reservation,
+#go-back {
+  background-color: #000;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  font-size: 15px;
+  width: 100px;
+  height: 35px;
+}
+
+.reservation-complete {
+  display: none;
+  text-align: center;
+}
+
+.reservation-complete h2 {
+  color: #000;
+}
+
+.cancel-complete {
+  display: none;
+  text-align: center;
+}
+
+.cancel-complete h2 {
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    width: 100%;
+    padding: 15px;
+    box-shadow: none;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .calendar-header button {
+    font-size: 16px;
+  }
+
+  .day {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .modal h2 {
+    font-size: large;
+  }
+
+  .reservation-complete h2 {
+    font-size: large;
+  }
+
+  .cancel-complete h2 {
+    font-size: large;
+  }
+
+  #confirm-btn,
+  #submit-reservation,
+  #modify-reservation,
+  #cancel-reservation,
+  #go-back,
+  #time {
+    width: 70px;
+    height: 25px;
+    font-size: small;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 18px;
+  }
+
+  .day {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .modal {
+    width: 90%;
+  }
+
+  .modal input {
+    font-size: 10px;
+  }
+
+  .modal h2 {
+    font-size: medium;
+  }
+
+  .reservation-complete h2 {
+    font-size: small;
+  }
+
+  .cancel-complete h2 {
+    font-size: small;
+  }
+
+  #confirm-btn,
+  #submit-reservation,
+  #modify-reservation,
+  #cancel-reservation,
+  #go-back,
+  #time {
+    width: 60px;
+    height: 26px;
+    font-size: 10px;
+  }
+}

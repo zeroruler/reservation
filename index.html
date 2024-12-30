@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>HTML + CSS</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container" id="reservation-page">
+      <h1>영덕대게 부천소사점 예약하기</h1>
+
+      <div class="calendar">
+        <div class="calendar-header">
+          <button id="prev-month">&lt;</button>
+          <span id="current-month">2024년 1월</span>
+          <button id="next-month">&gt;</button>
+        </div>
+        <div class="weekdays">
+          <div>일</div>
+          <div>월</div>
+          <div>화</div>
+          <div>수</div>
+          <div>목</div>
+          <div>금</div>
+          <div>토</div>
+        </div>
+        <div class="days" id="days">
+          <!-- Days will be dynamically loaded here -->
+        </div>
+      </div>
+
+      <div class="time-select" id="time-select">
+        <label for="time">시간을 선택하세요: </label>
+
+        <select id="time">
+          <option disabled selected>-</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="12:00">12:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+        </select>
+
+        <button id="confirm-btn">예약 확인</button>
+      </div>
+    </div>
+
+    <div class="modal" id="reservation-modal">
+      <h2>예약 정보를 입력해주세요.</h2>
+      <input type="text" id="name" placeholder="이름을 입력해주세요" />
+      <input type="text" id="phone" placeholder="전화번호를 입력해주세요" />
+      <button id="submit-reservation">예약 완료</button>
+    </div>
+
+    <div class="reservation-complete" id="reservation-complete">
+      <h2 id="completion-message">예약이 완료되었습니다!</h2>
+      <button id="modify-reservation">예약 변경</button>
+      <button id="cancel-reservation">예약 취소</button>
+    </div>
+
+    <div class="cancel-complete" id="cancel-complete">
+      <h2>예약이 취소되었습니다. 감사합니다 :)</h2>
+      <button id="go-back" onclick="location.href='index.html'">
+        처음으로
+      </button>
+    </div>
+
+    <script>
+      const daysContainer = document.getElementById("days");
+      const currentMonth = document.getElementById("current-month");
+      const timeSelect = document.getElementById("time-select");
+      const confirmBtn = document.getElementById("confirm-btn");
+      const reservationPage = document.getElementById("reservation-page");
+      const reservationComplete = document.getElementById(
+        "reservation-complete"
+      );
+      const completionMessage = document.getElementById("completion-message");
+      const modifyReservationBtn =
+        document.getElementById("modify-reservation");
+      const cancelReservationBtn =
+        document.getElementById("cancel-reservation");
+      const cancelComplete = document.getElementById("cancel-complete");
+      const reservationModal = document.getElementById("reservation-modal");
+      const submitReservationBtn =
+        document.getElementById("submit-reservation");
+
+      let selectedDate = "";
+      let selectedName = "";
+      let selectedTime = localStorage.getItem("selectedTime") || "";
+
+      const today = new Date();
+      let currentYear = today.getFullYear();
+      let currentMonthIndex = today.getMonth();
+
+      function loadCalendar(year, month) {
+        daysContainer.innerHTML = "";
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDay = firstDay.getDay();
+
+        currentMonth.textContent = `${year}년 ${month + 1}월`;
+
+        for (let i = 0; i < startDay; i++) {
+          const emptyDay = document.createElement("div");
+          daysContainer.appendChild(emptyDay);
+        }
+
+        for (let i = 1; i <= lastDay.getDate(); i++) {
+          const dayElement = document.createElement("div");
+          dayElement.classList.add("day");
+          dayElement.textContent = i;
+          dayElement.addEventListener("click", () => {
+            document
+              .querySelectorAll(".day")
+              .forEach((day) => day.classList.remove("selected"));
+            dayElement.classList.add("selected");
+            selectedDate = `${year}-${String(month + 1).padStart(
+              2,
+              "0"
+            )}-${String(i).padStart(2, "0")}`;
+            timeSelect.style.display = "block";
+            if (selectedTime) {
+              document.getElementById("time").value = selectedTime;
+            }
+          });
+          daysContainer.appendChild(dayElement);
+        }
+      }
+
+      document.getElementById("prev-month").addEventListener("click", () => {
+        currentMonthIndex--;
+        if (currentMonthIndex < 0) {
+          currentMonthIndex = 11;
+          currentYear--;
+        }
+        loadCalendar(currentYear, currentMonthIndex);
+      });
+
+      document.getElementById("next-month").addEventListener("click", () => {
+        currentMonthIndex++;
+        if (currentMonthIndex > 11) {
+          currentMonthIndex = 0;
+          currentYear++;
+        }
+        loadCalendar(currentYear, currentMonthIndex);
+      });
+
+      confirmBtn.addEventListener("click", () => {
+        const time = document.getElementById("time").value;
+        if (!selectedDate || !time) {
+          alert("날짜와 시간을 선택해주세요.");
+          return;
+        }
+        selectedTime = time;
+        localStorage.setItem("selectedTime", selectedTime);
+        reservationModal.style.display = "block";
+      });
+
+      submitReservationBtn.addEventListener("click", () => {
+        const nameInput = document.getElementById("name").value;
+        const phoneInput = document.getElementById("phone").value;
+
+        if (!nameInput || !phoneInput) {
+          alert("이름과 전화번호를 입력해주세요.");
+          return;
+        }
+
+        selectedName = nameInput;
+        reservationModal.style.display = "none";
+        reservationPage.style.display = "none";
+        reservationComplete.style.display = "block";
+
+        completionMessage.textContent = `${selectedName}님! ${selectedDate}일 ${selectedTime}시에 예약이 완료되었습니다!`;
+      });
+
+      modifyReservationBtn.addEventListener("click", () => {
+        reservationPage.style.display = "block";
+        reservationComplete.style.display = "none";
+        loadCalendar(currentYear, currentMonthIndex);
+        if (selectedTime) {
+          document.getElementById("time").value = selectedTime;
+        }
+      });
+
+      cancelReservationBtn.addEventListener("click", () => {
+        if (confirm("예약을 취소하시겠습니까?")) {
+          reservationComplete.style.display = "none";
+          cancelComplete.style.display = "block";
+          localStorage.removeItem("selectedTime");
+        }
+      });
+
+      loadCalendar(currentYear, currentMonthIndex);
+    </script>
+  </body>
+</html>
