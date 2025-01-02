@@ -73,6 +73,12 @@ h1 {
   color: #fff;
 }
 
+.disabled {
+    color: #ccc;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 .selected {
   background-color: #000;
   color: #fff;
