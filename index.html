@@ -5,11 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>예약하기</title>
-    <link rel="stylesheet" href="styles.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Gothic+A1&family=IBM+Plex+Sans+KR&family=Jua&family=Noto+Sans+KR:wght@100..900&display=swap");
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      :root {
+        font-size: calc(13px + 0.35vw);
+        --primary-color: #9faf97; /* 버튼 색상 검정으로 변경 */
+        --hover-color: #333; /* 호버 시 약간 밝은 색상 */
+        --background-color: #f5ece0; /* 배경색 */
+        --text-color: #333; /* 텍스트 기본 색상 */
+      }
+
+      body {
+        font-family: "IBM Plex Sans KR";
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        user-select: none;
+        margin: 0 auto;
+        padding: 0 0rem;
+        max-width: 50rem;
+        text-align: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        width: 90%;
+        max-width: 50rem;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: calc(14px + 2vw);
+        color: var(--text-color);
+      }
+
+      .calendar {
+        margin: 10px 0;
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .calendar-header button {
+        background: none;
+        transition: 0.07s;
+        border-radius: 5px;
+        padding: 7px 10px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--text-color);
+      }
+
+      .calendar-header button:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+
+      .day {
+        transition: 0.07s;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        font-size: calc(11px + 0.35vw);
+      }
+
+      .day:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .disabled {
+        color: #ccc;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      .selected {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .previously-selected {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .holiday {
+        background-color: #ffcccc;
+        color: #000;
+      }
+
+      .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        font-weight: bold;
+        text-align: center;
+        font-weight: lighter;
+      }
+
+      #time {
+        -o-appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+         {
+          ...;
+        }
+        width: 100px;
+        height: 35px;
+        background-size: 20px;
+        padding: 5px 10px 5px 10px;
+        border-radius: 5px;
+        outline: 0 none;
+      }
+
+      #time option {
+        background: var(--primary-color);
+        color: #fff;
+        padding: 3px 0;
+      }
+
+      .time-select {
+        display: none;
+        margin-top: 20px;
+        animation: fadeIn 0.5s;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #000;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+        text-align: center;
+        width: 90%;
+        box-sizing: border-box;
+      }
+
+      .modal h2 {
+        font-weight: 200;
+      }
+
+      .modal input {
+        margin: 10px 0;
+        padding: 8px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      #confirm-btn,
+      #submit-reservation,
+      #modify-reservation,
+      #cancel-reservation,
+      #go-back {
+        background-color: var(--text-color);
+        color: #fff;
+        border: 0;
+        border-radius: 5px;
+        font-size: 15px;
+        width: 100px;
+        height: 35px;
+      }
+
+      .reservation-complete {
+        display: none;
+        text-align: center;
+      }
+
+      .reservation-complete h2 {
+        color: var(--text-color);
+      }
+
+      .cancel-complete {
+        display: none;
+        text-align: center;
+      }
+
+      .cancel-complete h2 {
+        color: var(--text-color);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        #confirm-btn,
+        #submit-reservation,
+        #modify-reservation,
+        #cancel-reservation,
+        #go-back,
+        #time {
+          width: 70px;
+          height: 25px;
+          font-size: small;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #confirm-btn,
+        #submit-reservation,
+        #modify-reservation,
+        #cancel-reservation,
+        #go-back,
+        #time {
+          width: 60px;
+          height: 26px;
+          font-size: 10px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="container" id="reservation-page">
-      <h1>영덕대게 부천소사점 예약하기</h1>
+      <h1>예약하기</h1>
 
       <div class="calendar">
         <div class="calendar-header">
@@ -116,28 +356,33 @@
         }
 
         for (let i = 1; i <= lastDay.getDate(); i++) {
-                const dayElement = document.createElement('div');
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const dateObject = new Date(dateString);
+          const dayElement = document.createElement("div");
+          const dateString = `${year}-${String(month + 1).padStart(
+            2,
+            "0"
+          )}-${String(i).padStart(2, "0")}`;
+          const dateObject = new Date(dateString);
 
-                dayElement.classList.add('day');
-                dayElement.textContent = i;
+          dayElement.classList.add("day");
+          dayElement.textContent = i;
 
-                if (dateObject < currentDate) {
-                    dayElement.classList.add('disabled');
-                } else {
-                    dayElement.addEventListener('click', () => {
-                        document.querySelectorAll('.day').forEach(day => day.classList.remove('selected'));
-                        dayElement.classList.add('selected');
-                        selectedDate = dateString;
-                        timeSelect.style.display = 'block';
-                        if (selectedTime) {
-                            document.getElementById('time').value = selectedTime;
-                        }
-                    });
-                }
+          if (dateObject < currentDate) {
+            dayElement.classList.add("disabled");
+          } else {
+            dayElement.addEventListener("click", () => {
+              document
+                .querySelectorAll(".day")
+                .forEach((day) => day.classList.remove("selected"));
+              dayElement.classList.add("selected");
+              selectedDate = dateString;
+              timeSelect.style.display = "block";
+              if (selectedTime) {
+                document.getElementById("time").value = selectedTime;
+              }
+            });
+          }
 
-                daysContainer.appendChild(dayElement);
+          daysContainer.appendChild(dayElement);
         }
       }
 
